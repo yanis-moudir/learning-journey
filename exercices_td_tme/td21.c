@@ -31,10 +31,32 @@ void affiche_distances(int villes[], int dist[NB_VILLES][NB_VILLES]) {
         printf("\n");  
     }  
 }
+
 //pris beaucoup de temps pour trouver la solution donc j'ai directement copier le corrigé 
+int plus_proche (int laville, int villes[], int dist[NB_VILLES][NB_VILLES])
+{
+    int i,j,indice_laville=-1;
+    int min;
+    for(i=0;i<NB_VILLES;i++)
+    {
+        if (laville=villes[i]){indice_laville=i;}
+    }
+    for (j=0;j<NB_VILLES && indice_laville!=-1;j++)
+    {
+        min=dist[indice_laville][0];
+        if(dist[indice_laville][j]<min){min=dist[indice_laville][j];}
+    }
+    for (j = 0; j < NB_VILLES; j++) {  
+        if (j != indice_laville && dist[indice_laville][j] == min) {  
+            return j;  // Renvoie l'indice de la ville la plus proche
+        }  
+    }  
+
+}
 
 int main()
 {
     affiche_distances(villes,distances);
     return 0;
 }
+//il declare toujurs la valeur minimale comme -1
