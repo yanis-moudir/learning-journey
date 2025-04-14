@@ -30,16 +30,20 @@ int compress_tab(int tab_brut[], int tab_compress[]) {
         int compte = 1;
 
         // Compter les occurrences consécutives
-        while (tab_brut[i_brut + 1] == valeur) {//pour chaqu valeur sa compte aprés 
+        while (tab_brut[i_brut + 1] == valeur) //pour chaqu valeur sa compte aprés 
+        {
             compte++;                           //puis on incrémente i_brut qui est le nouveau indice 
             i_brut++;                           //
         }
 
         // Écrire dans tab_compress
-        if (compte >= 2) {
+        if (compte >= 2) 
+        {
             tab_compress[i_compress++] = compte;//on incrément i_compress par 1
             tab_compress[i_compress++] = valeur;//et on l'incrémente encore par 1
-        } else {
+        }
+        else 
+        {
             tab_compress[i_compress++] = valeur;  // Cas d'un seul élément
         }
 

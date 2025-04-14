@@ -58,7 +58,7 @@ int main()
 donc ppour la deuxiéme question il a calculer le nombre de lettr pour faire une allocation malloc exacte 
 puis tous est vrair de ma part 
 aussi il a fait appelle a la fonction isalpha de la bibliiothéque ctype qui va tous seule seule verifier si c'est un caractére
-aussi tojours verifier les allocation avec null ou pas 
+aussi toujours verifier les allocation avec null ou pas 
 */
 
 //corrigé 
