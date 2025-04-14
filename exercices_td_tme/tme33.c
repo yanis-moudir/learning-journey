@@ -26,4 +26,5 @@ int n_est_pas_deb(const char *s1, const char *s2) {
     }
     return n_est_pas_deb(s1 + 1, s2 + 1); // Appel récursif
 }
+//n_est_deb est juste linverse de est_deb
 
