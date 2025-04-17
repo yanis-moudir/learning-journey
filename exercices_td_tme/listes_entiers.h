@@ -6,4 +6,9 @@ struct _cellule_t {
 };
 
 cellule_t * creerListe(int n);
-
+int nb_occurences(int val, cellule_t *liste);
+int tous_plus_grand(int val, cellule_t *liste);
+cellule_t* Maximum(cellule_t *liste);
+int Renvoyer_val_element_pos(int pos, cellule_t* liste);
+cellule_t *Concatener_it(cellule_t *liste1, cellule_t *liste2);
+int nb_maximum(cellule_t *liste);
