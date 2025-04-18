@@ -13,16 +13,18 @@ cellule_t *suivant;
     el->donnee=d;
     el->suivant=NULL;
     return el;*/
-    cellule_t* Creer_cellule(int d) {
-        cellule_t *nouvelle = (cellule_t*)malloc(sizeof(cellule_t));  // Allocation mémoire
-        if (nouvelle == NULL) {
-            fprintf(stderr, "Erreur d'allocation mémoire\n");
-            exit(EXIT_FAILURE);
-        }
+cellule_t* Creer_cellule(int d) 
+{
+    cellule_t *nouvelle = (cellule_t*)malloc(sizeof(cellule_t));  // Allocation mémoire
+    if (nouvelle == NULL)
+    {
+        fprintf(stderr, "Erreur d'allocation mémoire\n");
+        exit(EXIT_FAILURE);
+    }
         nouvelle->donnee = d;  // Initialisation de la donnée
         nouvelle->suivant = NULL;  // Pas de cellule suivante
         return nouvelle;
-    }
+}
 void Afficher_liste_int(cellule_t *liste){
     /* Affiche les champs donnee des elements de la liste */
     cellule_t *cell = liste;
