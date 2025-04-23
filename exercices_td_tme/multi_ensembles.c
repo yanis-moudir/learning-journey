@@ -296,5 +296,24 @@ int Intersection_vide(element_t *e1, element_t *e2) {
     // Si on n’a trouvé aucune valeur commune
     return 1;
 }
+int taille(element_t* el1)
+{
+    if(el1==NULL){return 0;}
+    return el1->frequence+taille(el1->suivant);
+}
+element_t* Supprime_frequence_inf_seuil(element_t* ensemble, int seuil) {
+    // Cas de base : liste vide
+    if (ensemble == NULL) return NULL;
 
+    // Si la fréquence de l’élément courant est < seuil → on le supprime
+    if (ensemble->frequence < seuil) {
+        element_t* temp = ensemble->suivant;  // on garde le suivant
+        free(ensemble);                       // on libère l’élément actuel
+        return Supprime_frequence_inf_seuil(temp, seuil); // on traite le suivant
+    }
 
+    // Sinon, on garde l’élément, mais on traite récursivement le reste
+    ensemble->suivant = Supprime_frequence_inf_seuil(ensemble->suivant, seuil);
+    return ensemble;
+}
+// dans les fonction recursive faut toujours creer une nouvellle variables 
