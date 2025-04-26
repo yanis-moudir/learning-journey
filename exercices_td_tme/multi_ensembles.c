@@ -317,3 +317,149 @@ element_t* Supprime_frequence_inf_seuil(element_t* ensemble, int seuil) {
     return ensemble;
 }
 // dans les fonction recursive faut toujours creer une nouvellle variables 
+int inclus_rec(element_t *e1,element_t *e2)
+{
+    if(e1==NULL){return 1;}
+    if(e2==NULL){return 0;}
+    if (e1->valeur>e2->valeur){return 0;}
+    if(e1->valeur==e2->valeur && e1->frequence>e2->frequence){return 0;}
+    return inclus_rec(e1->suivant,e2->suivant);
+    if(e1->valeur==e2->valeur && e1->frequence<e2->frequence){return inclus_rec(e1,e2->suivant);}
+}
+element_t* Union(element_t* e1, element_t* e2) {
+    element_t* res = NULL;
+
+    while (e1 != NULL && e2 != NULL) {
+        if (e1->valeur < e2->valeur) {
+            res = Ajout_tete_ensemble(res, e2->valeur, e2->frequence);
+            e2 = e2->suivant;
+        } else if (e1->valeur > e2->valeur) {
+            res = Ajout_tete_ensemble(res, e1->valeur, e1->frequence);
+            e1 = e1->suivant;
+        } else {
+            res = Ajout_tete_ensemble(res, e1->valeur, e1->frequence + e2->frequence);
+            e1 = e1->suivant;
+            e2 = e2->suivant;
+        }
+    }
+
+    while (e1 != NULL) {
+        res = Ajout_tete_ensemble(res, e1->valeur, e1->frequence);
+        e1 = e1->suivant;
+    }
+
+    while (e2 != NULL) {
+        res = Ajout_tete_ensemble(res, e2->valeur, e2->frequence);
+        e2 = e2->suivant;
+    }
+
+    return res;
+}
+element_t* Ajout_suivant(element_t* element, int val, int freq) {
+    element_t* nouveau = malloc(sizeof(element_t));
+    nouveau->valeur = val;
+    nouveau->frequence = freq;
+    nouveau->suivant = NULL;
+
+    if (element == NULL) return nouveau;
+
+    nouveau->suivant = element->suivant;
+    element->suivant = nouveau;
+    return nouveau;
+}
+element_t* Union_triee(element_t* e1, element_t* e2) {
+    element_t* res = NULL;
+    element_t* last = NULL;
+
+    while (e1 != NULL && e2 != NULL) {
+        int val, freq;
+        if (e1->valeur < e2->valeur) {
+            val = e1->valeur; freq = e1->frequence; e1 = e1->suivant;
+        } else if (e1->valeur > e2->valeur) {
+            val = e2->valeur; freq = e2->frequence; e2 = e2->suivant;
+        } else {
+            val = e1->valeur; freq = e1->frequence + e2->frequence;
+            e1 = e1->suivant; e2 = e2->suivant;
+        }
+
+        if (res == NULL) {
+            res = Ajout_suivant(NULL, val, freq);
+            last = res;
+        } else {
+            last = Ajout_suivant(last, val, freq);
+        }
+    }
+
+    while (e1 != NULL) {
+        if (res == NULL) res = last = Ajout_suivant(NULL, e1->valeur, e1->frequence);
+        else last = Ajout_suivant(last, e1->valeur, e1->frequence);
+        e1 = e1->suivant;
+    }
+
+    while (e2 != NULL) {
+        if (res == NULL) res = last = Ajout_suivant(NULL, e2->valeur, e2->frequence);
+        else last = Ajout_suivant(last, e2->valeur, e2->frequence);
+        e2 = e2->suivant;
+    }
+
+    return res;
+}
+element_t* Union_triee_rec(element_t* e1, element_t* e2) {
+    if (e1 == NULL && e2 == NULL) return NULL; // Fin de liste
+
+    if (e2 == NULL || (e1 != NULL && e1->valeur < e2->valeur)) {
+        return Ajout_tete_ensemble(Union_triee_rec(e1->suivant, e2), e1->valeur, e1->frequence);
+    }
+
+    if (e1 == NULL || (e2 != NULL && e2->valeur < e1->valeur)) {
+        return Ajout_tete_ensemble(Union_triee_rec(e1, e2->suivant), e2->valeur, e2->frequence);
+    }
+
+    return Ajout_tete_ensemble(Union_triee_rec(e1->suivant, e2->suivant), e1->valeur, e1->frequence + e2->frequence);
+}
+element_t* Intersection_triee(element_t* e1, element_t* e2) {
+    element_t* res = NULL; // Liste résultat vide
+    element_t* last = NULL; // Dernier ajouté
+
+    while (e1 != NULL && e2 != NULL) {
+        if (e1->valeur < e2->valeur) e1 = e1->suivant; // Avancer e1
+        else if (e1->valeur > e2->valeur) e2 = e2->suivant; // Avancer e2
+        else {
+            int freq = (e1->frequence < e2->frequence) ? e1->frequence : e2->frequence; // Prendre minimum
+
+            if (res == NULL) res = last = Ajout_suivant(NULL, e1->valeur, freq);
+            else last = Ajout_suivant(last, e1->valeur, freq);
+
+            e1 = e1->suivant;
+            e2 = e2->suivant;
+        }
+    }
+
+    return res; // Résultat intersection
+}
+element_t* Difference_triee(element_t* e1, element_t* e2) {
+    element_t* res = NULL; // Liste résultat
+    element_t* last = NULL;
+
+    while (e1 != NULL) {
+        int f2 = 0; // Fréquence correspondante dans e2
+
+        while (e2 != NULL && e2->valeur < e1->valeur) {
+            e2 = e2->suivant; // Avancer e2 jusqu'à trouver valeur ou plus grand
+        }
+
+        if (e2 != NULL && e2->valeur == e1->valeur) {
+            f2 = e2->frequence;
+        }
+
+        if (e1->frequence > f2) { // Seulement si reste positif
+            int f = e1->frequence - f2;
+            if (res == NULL) res = last = Ajout_suivant(NULL, e1->valeur, f);
+            else last = Ajout_suivant(last, e1->valeur, f);
+        }
+
+        e1 = e1->suivant;
+    }
+
+    return res;
+}
